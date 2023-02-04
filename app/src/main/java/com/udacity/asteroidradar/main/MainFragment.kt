@@ -33,15 +33,17 @@ class MainFragment : Fragment() {
 			}
 		}
 
+		/*
 		viewModel.asteroidData.observe(viewLifecycleOwner) {
 			if (null != it) {
 				Log.i("nasa", "Asteroids: $it")
 			}
 		}
+		 */
 
 		viewModel.imageOfDayData.observe(viewLifecycleOwner) {
 			if (null != it) {
-				Log.i("nasa", "Image Of Day: ${it.url}")
+				binding.activityMainImageOfTheDay.contentDescription = it.explanation
 			}
 		}
 

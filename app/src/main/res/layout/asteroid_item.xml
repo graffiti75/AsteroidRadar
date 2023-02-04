@@ -22,7 +22,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="asteroid"
             type="com.udacity.asteroidradar.model.Asteroid" />
@@ -66,6 +65,7 @@
             android:layout_height="32dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:contentDescription="@{asteroid.codename}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
