@@ -17,11 +17,10 @@
 
 package com.udacity.asteroidradar.api
 
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.udacity.asteroidradar.Constants.API_KEY
 import com.udacity.asteroidradar.Constants.BASE_URL
+import com.udacity.asteroidradar.model.ImageOfDay
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -38,17 +37,22 @@ private val retrofit = Retrofit.Builder()
 	.baseUrl(BASE_URL)
 	.build()
 
-interface MarsApiService {
+interface ApiService {
 	@GET("neo/rest/v1/feed")
-	suspend fun getResponse(
+	suspend fun getAsteroids(
 //		@Query("start_date") startDate: String = "2022-12-31",
 //		@Query("end_date") endDate: String = "2022-12-31",
-		@Query("api_key") apiKey: String = "F8bSmvu0BvZKHG6YzZBnvilYzE9Od4fg0xNp02mz"
+		@Query("api_key") apiKey: String = API_KEY
+	): String
+
+	@GET("planetary/apod")
+	suspend fun getImageOfDay(
+		@Query("api_key") apiKey: String = API_KEY
 	): String
 }
 
 object AsteroidApi {
-	val retrofitService : MarsApiService by lazy {
-		retrofit.create(MarsApiService::class.java)
+	val retrofitService : ApiService by lazy {
+		retrofit.create(ApiService::class.java)
 	}
 }

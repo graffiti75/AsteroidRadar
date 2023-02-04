@@ -22,9 +22,15 @@ class MainFragment : Fragment() {
 		binding.lifecycleOwner = this
 		binding.viewModel = viewModel
 
-		viewModel.data.observe(viewLifecycleOwner) {
+		viewModel.asteroidData.observe(viewLifecycleOwner) {
 			if (null != it) {
-				Log.i("nasa", it.toString())
+				Log.i("nasa", "Asteroids: $it")
+			}
+		}
+
+		viewModel.imageOfDayData.observe(viewLifecycleOwner) {
+			if (null != it) {
+				Log.i("nasa", "Image Of Day: ${it.url}")
 			}
 		}
 
