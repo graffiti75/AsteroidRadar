@@ -22,6 +22,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="asteroid"
             type="com.udacity.asteroidradar.model.Asteroid" />
@@ -81,5 +82,18 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintGuide_percent="0.9" />
+
+        <ProgressBar
+            android:id="@+id/loading_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:foregroundTint="@color/colorAccent"
+            android:visibility="visible"
+            app:goneIfNotNull="@{asteroid}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

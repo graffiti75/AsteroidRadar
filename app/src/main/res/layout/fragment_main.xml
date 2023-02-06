@@ -45,16 +45,19 @@
                 android:textStyle="bold" />
         </FrameLayout>
 
-        <ImageView
-            android:id="@+id/status_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="100dp"
+        <ProgressBar
+            android:id="@+id/loading_spinner"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            app:goneIfNotNull="@{viewModel.asteroids}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:asteroidApiStatus="@{viewModel.asteroidStatus}" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activity_main_image_of_the_day_layout"
+            app:layout_constraintVertical_bias="0.0" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/asteroid_recycler"
@@ -67,8 +70,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/activity_main_image_of_the_day_layout"
             app:layout_constraintVertical_bias="0.0"
-            app:listData="@{viewModel.asteroidData}"
+            app:listData="@{viewModel.asteroids}"
             tools:itemCount="10"
             tools:listitem="@layout/asteroid_item" />
+
+        <ImageView
+            android:id="@+id/connection_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/black"
+            android:padding="50dp"
+            android:src="@drawable/ic_connection_error"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

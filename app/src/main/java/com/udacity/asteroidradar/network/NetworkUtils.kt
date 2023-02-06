@@ -1,7 +1,11 @@
-package com.udacity.asteroidradar.api
+package com.udacity.asteroidradar.network
 
-import com.udacity.asteroidradar.model.Asteroid
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import com.udacity.asteroidradar.Constants
+import com.udacity.asteroidradar.model.Asteroid
 import com.udacity.asteroidradar.model.ImageOfDay
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -58,18 +62,37 @@ private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
 }
 
 fun parseImageOfDayJsonResult(jsonResult: JSONObject): ImageOfDay {
-	val copyright = jsonResult.getString("copyright")
 	val date = jsonResult.getString("date")
 	val explanation = jsonResult.getString("explanation")
 	val hdurl = jsonResult.getString("hdurl")
 	val title = jsonResult.getString("title")
 	val url = jsonResult.getString("url")
 	return ImageOfDay(
-		copyright = copyright,
 		date = date,
 		explanation = explanation,
 		hdurl = hdurl,
 		title = title,
 		url = url
 	)
+}
+
+fun Context.isNetworkConnected(): Boolean {
+	val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+	if (cm != null) {
+		if (Build.VERSION.SDK_INT < 23) {
+			val ni = cm.activeNetworkInfo
+			if (ni != null) {
+				return ni.isConnected && (ni.type == ConnectivityManager.TYPE_WIFI || ni.type == ConnectivityManager.TYPE_MOBILE)
+			}
+		} else {
+			val n = cm.activeNetwork
+			if (n != null) {
+				val nc = cm.getNetworkCapabilities(n)
+				return nc!!.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(
+					NetworkCapabilities.TRANSPORT_WIFI
+				)
+			}
+		}
+	}
+	return false
 }

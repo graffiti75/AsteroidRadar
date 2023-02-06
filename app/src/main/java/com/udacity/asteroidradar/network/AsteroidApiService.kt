@@ -15,11 +15,10 @@
  *
  */
 
-package com.udacity.asteroidradar.api
+package com.udacity.asteroidradar.network
 
 import com.udacity.asteroidradar.Constants.API_KEY
 import com.udacity.asteroidradar.Constants.BASE_URL
-import com.udacity.asteroidradar.model.ImageOfDay
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET

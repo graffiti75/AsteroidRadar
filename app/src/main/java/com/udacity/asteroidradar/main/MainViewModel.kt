@@ -1,25 +1,42 @@
 package com.udacity.asteroidradar.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import androidx.lifecycle.*
+import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.model.Asteroid
 import com.udacity.asteroidradar.model.ImageOfDay
-import com.udacity.asteroidradar.api.AsteroidApi
-import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
-import com.udacity.asteroidradar.api.parseImageOfDayJsonResult
+import com.udacity.asteroidradar.network.AsteroidApi
+import com.udacity.asteroidradar.network.isNetworkConnected
+import com.udacity.asteroidradar.network.parseImageOfDayJsonResult
+import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 enum class ApiStatus { LOADING, ERROR, DONE }
 
-class MainViewModel : ViewModel() {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+
+	private val database = getDatabase(application)
+	private val asteroidsRepository = AsteroidsRepository(database)
+
+	/**
+	 * Factory for constructing DevByteViewModel with parameter
+	 */
+	class Factory(val app: Application) : ViewModelProvider.Factory {
+		override fun <T : ViewModel> create(modelClass: Class<T>): T {
+			if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+				@Suppress("UNCHECKED_CAST")
+				return MainViewModel(app) as T
+			}
+			throw IllegalArgumentException("Unable to construct viewmodel")
+		}
+	}
 
 	/**
 	 * Asteroids
 	 */
 
+	/*
 	private val _asteroidStatus = MutableLiveData<ApiStatus>()
 	val asteroidStatus: LiveData<ApiStatus> // The external immutable LiveData for the request status String
 		get() = _asteroidStatus
@@ -27,6 +44,7 @@ class MainViewModel : ViewModel() {
 	private val _asteroidData = MutableLiveData<List<Asteroid>>()
 	val asteroidData: LiveData<List<Asteroid>>
 		get() = _asteroidData
+	 */
 
 	/**
 	 * Image Of Day
@@ -49,10 +67,17 @@ class MainViewModel : ViewModel() {
 		get() = _navigateToSelectedAsteroid
 
 	init {
-		getAsteroids()
-		getImageOfDay()
+		val connected = application.applicationContext.isNetworkConnected()
+		if (connected) {
+			getImageOfDay()
+			viewModelScope.launch {
+				asteroidsRepository.refreshAsteroids()
+			}
+		}
 	}
+	val asteroids = asteroidsRepository.asteroids
 
+	/*
 	private fun getAsteroids() {
 		viewModelScope.launch {
 			_asteroidStatus.value = ApiStatus.LOADING
@@ -68,6 +93,7 @@ class MainViewModel : ViewModel() {
 			}
 		}
 	}
+	*/
 
 	private fun getImageOfDay() {
 		viewModelScope.launch {
@@ -75,7 +101,8 @@ class MainViewModel : ViewModel() {
 			try {
 				val result = AsteroidApi.retrofitService.getImageOfDay()
 				if (result.isNotEmpty()) {
-					_imageOfDayData.value = parseImageOfDayJsonResult(JSONObject(result))
+					val parse = parseImageOfDayJsonResult(JSONObject(result))
+					_imageOfDayData.value = parse
 				}
 				_imageOfDayStatus.value = ApiStatus.DONE
 			} catch (e: Exception) {

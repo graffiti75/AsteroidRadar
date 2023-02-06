@@ -12,6 +12,7 @@ import com.udacity.asteroidradar.main.ApiStatus
 import com.udacity.asteroidradar.main.AsteroidAdapter
 import com.udacity.asteroidradar.model.Asteroid
 
+
 @BindingAdapter("statusIcon")
 fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
 	if (isHazardous) {
@@ -84,4 +85,12 @@ fun bindStatus(statusImageView: ImageView, status: ApiStatus?) {
 		}
 		else -> {}
 	}
+}
+
+/**
+ * Binding adapter used to hide the spinner once data is available
+ */
+@BindingAdapter("goneIfNotNull")
+fun goneIfNotNull(view: View, it: Any?) {
+	view.visibility = if (it != null) View.GONE else View.VISIBLE
 }
